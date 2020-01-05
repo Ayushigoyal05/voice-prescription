@@ -12,7 +12,11 @@ const Landing = props => {
       </div>
       <div style={{ marginTop: 36 }}>
         <center>
-          <Link className="button is-link is-medium" to="/buy">
+          <Link
+            className="button is-link is-medium"
+            to="/buy"
+            style={{ borderRadius: 8 }}
+          >
             <span>
               <strong>Explore</strong>
             </span>
