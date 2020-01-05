@@ -9,15 +9,15 @@ import { default as namehash } from "eth-ens-namehash";
 var firebase = require("firebase/app");
 require("firebase/database");
 var firebaseConfig = {
-    apiKey: "AIzaSyAW7wLaTE0KU-Z4Xfo-RRi1pniKbfv1bnU",
-    authDomain: "enssubdomains.firebaseapp.com",
-    databaseURL: "https://enssubdomains.firebaseio.com",
-    projectId: "enssubdomains",
-    storageBucket: "enssubdomains.appspot.com",
-    messagingSenderId: "144456130924",
-    appId: "1:144456130924:web:8c58c329ce2a6f3aacd349",
-    measurementId: "G-C4PFEFFJ1X"
-  };
+  apiKey: "AIzaSyAW7wLaTE0KU-Z4Xfo-RRi1pniKbfv1bnU",
+  authDomain: "enssubdomains.firebaseapp.com",
+  databaseURL: "https://enssubdomains.firebaseio.com",
+  projectId: "enssubdomains",
+  storageBucket: "enssubdomains.appspot.com",
+  messagingSenderId: "144456130924",
+  appId: "1:144456130924:web:8c58c329ce2a6f3aacd349",
+  measurementId: "G-C4PFEFFJ1X"
+};
 firebase.initializeApp(firebaseConfig);
 // Get a reference to the database service
 var database = firebase.database();
@@ -46,7 +46,7 @@ class Web3Service {
       registration_date: "2020.05.04 at 05:30",
       parent: "eth",
       on_sale: true,
-      price: 0,
+      price: 0
     },
     {
       domain_name: "isfund.eth",
@@ -57,7 +57,7 @@ class Web3Service {
       owner: "0xC32659651D137A18b79925449722855aA327231d",
       controller: "0xC32659651D137A18b79925449722855aA327231d",
       registrant: "0xC32659651D137A18b79925449722855aA327231d",
-      resolver: "0xD4fC014343cd971B7eb70732021E26dk5B744cf4",
+      resolver: "0xD4fC014343cd971B7eb70732021E26dk5B744cf4"
     },
     {
       domain_name: "thecryptoguy.eth",
@@ -120,16 +120,19 @@ class Web3Service {
   getDomains = async () => {
     var domains;
     var DomainsList = [];
-    await database.ref('/domains').once('value').then(function(snapshot) {
-      domains = snapshot.val();
-    });
+    await database
+      .ref("/domains")
+      .once("value")
+      .then(function(snapshot) {
+        domains = snapshot.val();
+      });
     console.log(domains);
 
-    DomainsList = await Object.values(domains)
+    DomainsList = await Object.values(domains);
     this.allDomains = DomainsList;
-    console.log(DomainsList)
+    console.log(DomainsList);
     return DomainsList;
-  }
+  };
 
   start = async () => {
     SubdomainRegistrar.setProvider(window.web3.currentProvider);
@@ -161,20 +164,24 @@ class Web3Service {
       }
 
       this.allDomains[i].contract = registrars[domain.registrar];
-      this.allDomains[i].controller = "0x00"
-      this.allDomains[i].on_sale = true
-      this.allDomains[i].owner = "0x00"
-      this.allDomains[i].parent = "eth"
-      this.allDomains[i].registrant = "0x00"
-      this.allDomains[i].registration_date = "2020.05.04 at 05:30"
-      const info = await this.checkDomain(domain, 'trellis');
-      this.allDomains[i].price = parseInt(info.price) / (10 ** 18)
+      this.allDomains[i].controller = "0x00";
+      this.allDomains[i].on_sale = true;
+      this.allDomains[i].owner = "0x00";
+      this.allDomains[i].parent = "eth";
+      this.allDomains[i].registrant = "0x00";
+      this.allDomains[i].registration_date = "2020.05.04 at 05:30";
+      this.allDomains[i].subdomains = [];
+      const info = await this.checkDomain(domain, "trellis");
+      this.allDomains[i].price = parseInt(info.price) / 10 ** 18;
+
+      //this.allDomains[i].price = await this.checkDomain(this.allDomains[i].domain_name, 'trellis')
+      //console.log('price ',await this.checkDomain(this.allDomains[i].domain_name, 'trellis'))
     }
-    console.log('finish', this.allDomains);
+    console.log("finish", this.allDomains);
   };
 
   checkDomain = async (domain, subdomain) => {
-    console.log('tyuiuyuiu',domain);
+    console.log("tyuiuyuiu", domain);
     var info = await this.registrarVersions.query(domain, subdomain);
     return info;
   };

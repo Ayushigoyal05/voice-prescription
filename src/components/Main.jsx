@@ -3,6 +3,43 @@ import SubdomainItem from "./SubdomainItem";
 import LeaderboardItem from "./LeaderboardItem";
 import BuySubdomainModal from "./BuySubdomainModal";
 
+class CustomCheckbox extends React.Component {
+  state = {
+    charLen: this.props.charLen
+  };
+  handleCharLengthChange = (index, event) => {
+    var { charLen } = this.state;
+    charLen[index].selected = event.target.checked;
+    this.props.onUpdate(charLen);
+    this.setState({ charLen });
+  };
+  componentDidUpdate() {
+    if (this.props.doReset) {
+      this.setState({ charLen: this.props.charLen });
+      this.props.updateDoReset();
+    }
+  }
+  render() {
+    return (
+      <div>
+        {this.state.charLen.map((charLen, i) => (
+          <div className="dropdown-item" key={i}>
+            <span>
+              <input
+                type="checkbox"
+                checked={charLen.selected}
+                style={{ marginRight: 4 }}
+                onChange={e => this.handleCharLengthChange(i, e)}
+              />
+              {charLen.type}
+            </span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+}
+
 const Main = props => {
   const [subdomain, setSubdomain] = React.useState("");
   const [filterDomainText, setFilterDomainText] = React.useState("");
@@ -13,6 +50,31 @@ const Main = props => {
   const [leaderboardList, setLeaderboardList] = React.useState([]);
   const [openBuyModal, setOpenBuyModal] = React.useState(false);
   const [selectedDomain, setSelectedDomain] = React.useState({});
+  const [selectedOnSale, setSelectedOnSale] = React.useState(false);
+  const [selectedOnOffer, setSelectedOnOffer] = React.useState(false);
+  const [selectedCharLen, setSelectedCharLen] = React.useState([
+    {
+      type: "3 Characters",
+      selected: false
+    },
+    {
+      type: "4 Characters",
+      selected: false
+    },
+    {
+      type: "5 Characters",
+      selected: false
+    },
+    {
+      type: "6 Characters",
+      selected: false
+    },
+    {
+      type: "7+ Characters",
+      selected: false
+    }
+  ]);
+  const [doReset, setDoReset] = React.useState(false);
 
   const handleSubdomainChange = e => {
     setLoading(true);
@@ -63,12 +125,29 @@ const Main = props => {
 
   React.useEffect(() => {
     if (props.domains !== undefined) {
-      const onSaleDomains = props.domains.filter(domain => domain.on_sale);
-      setLeaderboardList(onSaleDomains.slice(1, 5));
+      const sortedDomain = props.domains.sort((a, b) => {
+        var res = 0;
+        if (b.subdomains && a.subdomain) {
+          res = b.subdomains.length - a.subdomains.length;
+        }
+        return res;
+      });
+      const onSaleDomains = sortedDomain.filter(domain => domain.on_sale);
+      setLeaderboardList(onSaleDomains.slice(1,5));
     }
   }, [props]);
 
-  const sortByPrice = () => {
+  const sortByPriceLowToHigh = () => {
+    if (props.domains !== undefined) {
+      const sortedDomain = subdomainList.sort((a, b) => {
+        return a.price - b.price;
+      });
+      const onSaleDomains = sortedDomain.filter(domain => domain.on_sale);
+      setFilteredSubdomainList(onSaleDomains);
+    }
+  };
+
+  const sortByPriceHighToLow = () => {
     if (props.domains !== undefined) {
       const sortedDomain = subdomainList.sort((a, b) => {
         return b.price - a.price;
@@ -77,6 +156,7 @@ const Main = props => {
       setFilteredSubdomainList(onSaleDomains);
     }
   };
+
   const sortByPopularity = () => {
     if (props.domains !== undefined) {
       const sortedDomain = subdomainList.sort((a, b) => {
@@ -86,6 +166,57 @@ const Main = props => {
       setFilteredSubdomainList(onSaleDomains);
     }
   };
+
+  const sortByRecent = () => {
+    // To be implemented later
+  };
+
+  const handleOnSale = () => {
+    // To be implemented later
+
+    setSelectedOnSale(!selectedOnSale);
+  };
+
+  const handleOnOffer = () => {
+    // To be implemented later
+
+    setSelectedOnOffer(!selectedOnOffer);
+  };
+
+  const handleCharLenUpdate = charLen => {
+    setSelectedCharLen(charLen);
+  };
+
+  const handleReset = () => {
+    setSelectedOnOffer(false);
+    setSelectedOnSale(false);
+    setFilterDomainText("");
+    setFilteredSubdomainList(subdomainList);
+    setSelectedCharLen([
+      {
+        type: "3 Characters",
+        selected: false
+      },
+      {
+        type: "4 Characters",
+        selected: false
+      },
+      {
+        type: "5 Characters",
+        selected: false
+      },
+      {
+        type: "6 Characters",
+        selected: false
+      },
+      {
+        type: "7+ Characters",
+        selected: false
+      }
+    ]);
+    setDoReset(true);
+  };
+
   return (
     <section className="section">
       <div className="container">
@@ -127,7 +258,7 @@ const Main = props => {
             <div className="level">
               <div className="level-left">
                 <div className="level-item">
-                  <div className="control">
+                  <div className="control has-icons-left">
                     <input
                       className="input"
                       type="text"
@@ -135,7 +266,80 @@ const Main = props => {
                       value={filterDomainText}
                       onChange={handleFilterDomainText}
                     />
+                    <span className="icon is-small is-left">
+                      <i className="fas fa-search"></i>
+                    </span>
                   </div>
+                </div>
+                <div className="level-item">
+                  <div className="dropdown is-hoverable">
+                    <div className="dropdown-trigger">
+                      <button
+                        className="button"
+                        aria-haspopup="true"
+                        aria-controls="dropdown-menu4"
+                      >
+                        <span>Character Length</span>
+                        <span className="icon is-small">
+                          <i
+                            className="fas fa-angle-down"
+                            aria-hidden="true"
+                          ></i>
+                        </span>
+                      </button>
+                    </div>
+                    <div
+                      className="dropdown-menu"
+                      id="dropdown-menu4"
+                      role="menu"
+                    >
+                      <div className="dropdown-content">
+                        <CustomCheckbox
+                          charLen={selectedCharLen}
+                          onUpdate={handleCharLenUpdate}
+                          doReset={doReset}
+                          updateDoReset={() => setDoReset(false)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="level-item">
+                  <div
+                    className={
+                      selectedOnSale ? "tag is-link is-large" : "tag-inactive"
+                    }
+                    style={{ marginLeft: 15, cursor: "pointer" }}
+                    onClick={handleOnSale}
+                  >
+                    <span style={{ fontSize: 16, fontWeight: 700 }}>
+                      On Sale
+                    </span>
+                    {selectedOnSale ? (
+                      <button className="delete"></button>
+                    ) : null}
+                  </div>
+                  <div
+                    className={
+                      selectedOnOffer ? "tag is-link is-large" : "tag-inactive"
+                    }
+                    style={{ marginLeft: 15, cursor: "pointer" }}
+                    onClick={handleOnOffer}
+                  >
+                    <span style={{ fontSize: 16, fontWeight: 700 }}>
+                      On Offer
+                    </span>
+                    {selectedOnOffer ? (
+                      <button className="delete"></button>
+                    ) : null}
+                  </div>
+                </div>
+                <div
+                  className="level-item"
+                  style={{ cursor: "pointer", marginLeft: 12, fontWeight: 700 }}
+                  onClick={handleReset}
+                >
+                  <a className="delete" style={{ marginRight: 8 }}></a>Reset
                 </div>
               </div>
 
@@ -163,11 +367,23 @@ const Main = props => {
                       role="menu"
                     >
                       <div className="dropdown-content">
+                        <a className="dropdown-item" onClick={sortByRecent}>
+                          Recent
+                        </a>
                         <a className="dropdown-item" onClick={sortByPopularity}>
                           Popularity
                         </a>
-                        <a className="dropdown-item" onClick={sortByPrice}>
-                          Price
+                        <a
+                          className="dropdown-item"
+                          onClick={sortByPriceLowToHigh}
+                        >
+                          Price Low To High
+                        </a>
+                        <a
+                          className="dropdown-item"
+                          onClick={sortByPriceHighToLow}
+                        >
+                          Price High to Low
                         </a>
                       </div>
                     </div>

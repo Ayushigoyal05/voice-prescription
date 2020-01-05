@@ -7,7 +7,7 @@ function App(props) {
   return (
     <div className="App">
       <Header userAddress={props.userAddress} />
-      {props.children}
+      <div style={{ marginTop: 56 }}>{props.children}</div>
     </div>
   );
 }
