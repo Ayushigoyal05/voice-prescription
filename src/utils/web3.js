@@ -169,9 +169,6 @@ class Web3Service {
       this.allDomains[i].registration_date = "2020.05.04 at 05:30"
       const info = await this.checkDomain(domain, 'trellis');
       this.allDomains[i].price = parseInt(info.price) / (10 ** 18)
-
-      //this.allDomains[i].price = await this.checkDomain(this.allDomains[i].domain_name, 'trellis')
-      //console.log('price ',await this.checkDomain(this.allDomains[i].domain_name, 'trellis'))
     }
     console.log('finish', this.allDomains);
   };

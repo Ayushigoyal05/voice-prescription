@@ -28,12 +28,11 @@ const LeaderboardItem = props => {
           </div>
           <div className="level-right">
             <div className="level-item" style={{ marginRight: 36 }}>
-              <h2 className="title is-5">Subdomains: </h2>
+              <h2 className="title is-5"></h2>
               <h2
                 className="title is-4 has-text-link"
                 style={{ marginLeft: 12 }}
               >
-                333
               </h2>
             </div>
             <div className="level-item" style={{ marginRight: 36 }}>

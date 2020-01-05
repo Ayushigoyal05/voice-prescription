@@ -64,7 +64,7 @@ const Main = props => {
   React.useEffect(() => {
     if (props.domains !== undefined) {
       const onSaleDomains = props.domains.filter(domain => domain.on_sale);
-      setLeaderboardList(onSaleDomains);
+      setLeaderboardList(onSaleDomains.slice(1, 5));
     }
   }, [props]);
 

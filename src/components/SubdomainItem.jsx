@@ -36,7 +36,7 @@ const SubdomainItem = props => {
           close={closeOpenBuying}
         />
       ) : null}
-      <div className="card-content" onClick={buySubdomain}>
+      <div className="card-content">
         <div className="level">
           <div className="level-left">
             <div>
@@ -70,6 +70,13 @@ const SubdomainItem = props => {
                 <div className="title">{props.price}</div>
               </div>
             ) : null}
+            <button
+              className="button is-success"
+              aria-haspopup="true"
+              onClick={buySubdomain}
+            >
+              <span>Buy Now</span>
+            </button>
           </div>
         </div>
       </div>
