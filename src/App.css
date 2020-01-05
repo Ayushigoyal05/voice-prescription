@@ -11,3 +11,40 @@
   min-height: 56px;
   align-items: center;
 }
+
+.rc-slider-handle {
+  border: solid 2px #3273dc !important;
+}
+
+.rc-slider-track {
+  background-color: #3273dc !important;
+  height: 6px !important;
+}
+
+.rc-slider-step {
+  height: 6px !important;
+}
+
+.rc-slider-rail {
+  height: 6px !important;
+}
+
+.rc-slider-handle {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.tag-inactive {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  width: 100px;
+  align-items: center;
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #3273dc;
+  color: #3273dc;
+  font-weight: 700;
+  cursor: pointer;
+}

@@ -33,7 +33,7 @@ const LeaderboardItem = props => {
                 className="title is-4 has-text-link"
                 style={{ marginLeft: 12 }}
               >
-                333
+                {props.domain.subdomains.length}
               </h2>
             </div>
             <div className="level-item" style={{ marginRight: 36 }}>

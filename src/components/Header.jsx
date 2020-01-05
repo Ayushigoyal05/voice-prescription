@@ -8,7 +8,7 @@ const Header = props => {
   const [showFullAddress, setShowFullAddress] = React.useState(false);
   return (
     <nav
-      className="navbar is-light"
+      className="navbar is-light is-fixed-top"
       role="navigation"
       aria-label="main navigation"
     >
