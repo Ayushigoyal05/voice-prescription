@@ -5,13 +5,29 @@ import ens_artifacts from "../contracts/ENS.json";
 import { keccak_256 as sha3 } from "js-sha3";
 import { default as namehash } from "eth-ens-namehash";
 
+var firebase = require("firebase/app");
+require("firebase/database");
+var firebaseConfig = {
+    apiKey: "AIzaSyAW7wLaTE0KU-Z4Xfo-RRi1pniKbfv1bnU",
+    authDomain: "enssubdomains.firebaseapp.com",
+    databaseURL: "https://enssubdomains.firebaseio.com",
+    projectId: "enssubdomains",
+    storageBucket: "enssubdomains.appspot.com",
+    messagingSenderId: "144456130924",
+    appId: "1:144456130924:web:8c58c329ce2a6f3aacd349",
+    measurementId: "G-C4PFEFFJ1X"
+  };
+firebase.initializeApp(firebaseConfig);
+// Get a reference to the database service
+var database = firebase.database();
+
 const referrerAddress = "0x0904Dac3347eA47d208F3Fd67402D039a3b99859";
 
 const SubdomainRegistrar = contract(subdomainregistrar_artifacts);
 const ENS = contract(ens_artifacts);
 
 class Web3Service {
-  allDomains = [
+  aallDomains = [
     {
       domain_name: "etherbase.eth",
       owner: "0xDDF369C3bf18b1B12EA295d597B943b955eF4671",
@@ -21,28 +37,6 @@ class Web3Service {
       parent: "eth",
       on_sale: true,
       price: 0,
-      subdomains: [
-        {
-          subdomain_name: "mrfixpixdfj",
-          owner: "0x09b28aBeb3c6a60C802Df628d3397C4449A842a5",
-          registration_date: "2019.07.24 at 16:44"
-        },
-        {
-          subdomain_name: "serkklanmen",
-          owner: "0x4eb28aBeb3c6a60C802AJH28d3397C4449A849H2",
-          registration_date: "2019.03.14 at 13:16"
-        },
-        {
-          subdomain_name: "jkdjsliujj",
-          owner: "0xOu632585420403sdb184C4C1p6c420eC40f1c9JH",
-          registration_date: "2019.07.22 at 22:54"
-        },
-        {
-          subdomain_name: "opkerwmr",
-          registration_date: "2019.09.16 at 20:23",
-          owner: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1"
-        }
-      ]
     },
     {
       domain_name: "isfund.eth",
@@ -54,34 +48,12 @@ class Web3Service {
       controller: "0xC32659651D137A18b79925449722855aA327231d",
       registrant: "0xC32659651D137A18b79925449722855aA327231d",
       resolver: "0xD4fC014343cd971B7eb70732021E26dk5B744cf4",
-      subdomains: [
-        {
-          subdomain_name: "mrfixpix",
-          owner: "0x4eb28aBeb3c6a60C802A5628d3397C4449A842a5",
-          registration_date: "2017.06.04 at 12:46"
-        },
-        {
-          subdomain_name: "serkansokmen",
-          owner: "0x4eb28aBeb3c6a60C802A5628d3397C4449A842a5",
-          registration_date: "2017.06.08 at 13:36"
-        },
-        {
-          subdomain_name: "mumuss",
-          owner: "0xE163258542040394b184C4C166c420eC40f1c222",
-          registration_date: "2017.06.12 at 18:34"
-        },
-        {
-          subdomain_name: "jkerskr",
-          registration_date: "2019.09.14 at 10:47",
-          owner: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1"
-        }
-      ]
     },
     {
       domain_name: "thecryptoguy.eth",
       parent: "eth",
       registration_date: "2019.12.12 at 21:12",
-      on_sale: false,
+      on_sale: true,
       price: 0.02,
       owner: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1",
       controller: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1",
@@ -93,7 +65,7 @@ class Web3Service {
       domain_name: "trustnobank.eth",
       parent: "eth",
       registration_date: "2019.12.12 at 21:12",
-      on_sale: false,
+      on_sale: true,
       price: 0.01,
       owner: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1",
       controller: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1",
@@ -102,6 +74,9 @@ class Web3Service {
       subdomains: []
     }
   ];
+
+  allDomains = [];
+
   registrarVersions = {
     query: async (domain, subdomain) => {
       return domain.contract.query(
@@ -132,13 +107,26 @@ class Web3Service {
     }
   };
 
+  getDomains = async () => {
+    var domains;
+    var DomainsList = [];
+    await database.ref('/domains').once('value').then(function(snapshot) {
+      domains = snapshot.val();
+    });
+    console.log(domains);
+
+    DomainsList = await Object.values(domains)
+    this.allDomains = DomainsList;
+    console.log(DomainsList)
+    return DomainsList;
+  }
+
   start = async () => {
     SubdomainRegistrar.setProvider(window.web3.currentProvider);
     ENS.setProvider(window.web3.currentProvider);
 
     try {
       this.ens = await ENS.deployed();
-
       // Construct instances of the registrars we know about
       await this.buildInstances();
 
@@ -161,11 +149,21 @@ class Web3Service {
           ? SubdomainRegistrar.deployed()
           : SubdomainRegistrar.at(domain.registrar));
       }
+
       this.allDomains[i].contract = registrars[domain.registrar];
+      this.allDomains[i].controller = "0x00"
+      this.allDomains[i].price = 0
+      this.allDomains[i].on_sale = true
+      this.allDomains[i].owner = "0x00"
+      this.allDomains[i].parent = "eth"
+      this.allDomains[i].registrant = "0x00"
+      this.allDomains[i].registration_date = "2020.05.04 at 05:30"
     }
+    console.log('finish', this.allDomains);
   };
 
   checkDomain = async (domain, subdomain) => {
+    console.log('tyuiuyuiu',domain);
     var info = await this.registrarVersions.query(domain, subdomain);
     return info;
   };

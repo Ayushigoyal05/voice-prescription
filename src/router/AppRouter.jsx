@@ -8,7 +8,7 @@ import DomainDetails from "../components/DomainDetails";
 import Dashboard from "../components/Dashboard";
 
 const AppRouter = props => {
-  const [domainsList, setDomainsList] = React.useState(Store.all_domains());
+  const [domainsList, setDomainsList] = React.useState([]);
   const [myDomainList, setMyDomainList] = React.useState([]);
   const [mySubdomainList, setMySubdomainList] = React.useState([]);
   const [selectedAddress, setSelectedAddress] = React.useState();
@@ -24,6 +24,8 @@ const AppRouter = props => {
 
   React.useEffect(() => {
     const fetchAccount = async () => {
+      const selldomains = await Store.all_domains();
+      setDomainsList(selldomains);
       const address = await Web3Service.getAccount();
       await Web3Service.start();
 
@@ -42,21 +44,7 @@ const AppRouter = props => {
     );
     setMyDomainList(myDomains);
 
-    const allDomains = domainsList;
-    allDomains.forEach(domain => {
-      domain.subdomains.forEach(subdomain => {
-        Object.assign(subdomain, {
-          parent: domain.domain_name
-        });
-      });
-    });
-    const mySubDomains = allDomains
-      .map(domain => domain.subdomains)
-      .flat()
-      .filter(
-        domain => domain.owner.toLowerCase() === selectedAddress.toLowerCase()
-      );
-    setMySubdomainList(mySubDomains);
+    
   };
 
   const updateDomainPrice = (domain, price) => {

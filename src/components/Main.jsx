@@ -62,11 +62,9 @@ const Main = props => {
   };
 
   React.useEffect(() => {
+    console.log('qweqwe', props.domains)
     if (props.domains !== undefined) {
-      const sortedDomain = props.domains.sort((a, b) => {
-        return b.subdomains.length - a.subdomains.length;
-      });
-      const onSaleDomains = sortedDomain.filter(domain => domain.on_sale);
+      const onSaleDomains = props.domains.filter(domain => domain.on_sale);
       setLeaderboardList(onSaleDomains);
     }
   }, [props]);

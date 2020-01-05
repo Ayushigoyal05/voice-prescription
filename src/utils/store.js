@@ -1,6 +1,9 @@
 import Web3Service from "./web3";
+
 class Store {
-  all_domains = () => {
+
+  all_domains = async () => {
+    await Web3Service.getDomains();
     return Web3Service.allDomains;
   };
 
