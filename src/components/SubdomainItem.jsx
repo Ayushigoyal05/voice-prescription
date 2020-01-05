@@ -13,7 +13,6 @@ const SubdomainItem = props => {
         props.domain,
         props.subdomainName.split(".")[0]
       );
-      console.log(info);
       const tx = await Web3Service.buySubdomain(
         props.domain,
         props.subdomainName.split(".")[0],

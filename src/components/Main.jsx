@@ -80,6 +80,7 @@ const Main = props => {
     setLoading(true);
 
     const subdomain = e.target.value;
+    console.log(subdomain)
     setSubdomain(subdomain);
     if (e.target.value !== "") {
       const domains = props.domains;
@@ -101,6 +102,20 @@ const Main = props => {
     setLoading(false);
   };
 
+  const handleLoadMore = () => {
+      const domains = props.domains;
+      const newSubdomains = domains.map(domain => ({
+        ...domain,
+        subdomain_name: subdomain + "." + domain.domain_name
+      }));
+      const newSubdomainFiltered = newSubdomains.filter(
+        subdomain => subdomain.on_sale
+      );
+      setSubdomainList(newSubdomainFiltered);
+      setFilteredSubdomainList(newSubdomainFiltered);
+      setValidSubdomain(true);
+  };
+
   const openBuySubdomainModal = (open, domain) => {
     setSelectedDomain(domain);
     setOpenBuyModal(open);
@@ -117,7 +132,10 @@ const Main = props => {
       const filteredSubdomain = subdomainList.filter(
         subdomain => subdomain.domain_name.indexOf(domain) !== -1
       );
+    
+      if(filteredSubdomain.length > 0){
       setFilteredSubdomainList(filteredSubdomain);
+      }
     } else {
       setFilteredSubdomainList(subdomainList);
     }
@@ -408,7 +426,18 @@ const Main = props => {
                 />
               ))}
             </div>
+            <div className="level-right">
+            <button
+              className="button"
+              aria-haspopup="true"
+              value={subdomain}
+              onClick={handleLoadMore}
+            >
+              <span>Load More</span>
+            </button>
+            </div>
           </div>
+          
         ) : null}
         {filteredSubdomainList.length === 0 ? (
           <div>
@@ -418,14 +447,16 @@ const Main = props => {
               </center>
             </div>
             <div>
-              {leaderboardList.map((domain, i) => (
+              {leaderboardList.length > 0 ? (
+                leaderboardList.map((domain, i) => (
                 <LeaderboardItem
                   domain={domain}
                   index={i + 1}
                   setOpenBuyModal={openBuySubdomainModal}
                   key={i}
                 />
-              ))}
+              ))
+              ) : <center><h2> Loading ... </h2></center>}
             </div>
           </div>
         ) : null}

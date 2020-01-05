@@ -126,11 +126,8 @@ class Web3Service {
       .then(function(snapshot) {
         domains = snapshot.val();
       });
-    console.log(domains);
-
     DomainsList = await Object.values(domains);
     this.allDomains = DomainsList;
-    console.log(DomainsList);
     return DomainsList;
   };
 
@@ -173,15 +170,10 @@ class Web3Service {
       this.allDomains[i].subdomains = [];
       const info = await this.checkDomain(domain, "trellis");
       this.allDomains[i].price = parseInt(info.price) / 10 ** 18;
-
-      //this.allDomains[i].price = await this.checkDomain(this.allDomains[i].domain_name, 'trellis')
-      //console.log('price ',await this.checkDomain(this.allDomains[i].domain_name, 'trellis'))
     }
-    console.log("finish", this.allDomains);
   };
 
   checkDomain = async (domain, subdomain) => {
-    console.log("tyuiuyuiu", domain);
     var info = await this.registrarVersions.query(domain, subdomain);
     return info;
   };
