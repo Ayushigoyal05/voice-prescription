@@ -4,6 +4,7 @@ import subdomainregistrar_artifacts from "../contracts/EthRegistrarSubdomainRegi
 import ens_artifacts from "../contracts/ENS.json";
 import { keccak_256 as sha3 } from "js-sha3";
 import { default as namehash } from "eth-ens-namehash";
+//import domainnames from './domains.json';
 
 var firebase = require("firebase/app");
 require("firebase/database");
@@ -20,6 +21,15 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 // Get a reference to the database service
 var database = firebase.database();
+
+//console.log('jsonnn', domainnames)
+//for (var i = 0; i<domainnames.length; i++){
+//  console.log('name',domainnames[i].name);
+//  var domain_name = domainnames[i].name;
+//  database.ref('/domains/' + domain_name).set({
+//        domain_name: domain_name + '.eth',
+//      });
+//}
 
 const referrerAddress = "0x0904Dac3347eA47d208F3Fd67402D039a3b99859";
 
@@ -152,12 +162,16 @@ class Web3Service {
 
       this.allDomains[i].contract = registrars[domain.registrar];
       this.allDomains[i].controller = "0x00"
-      this.allDomains[i].price = 0
       this.allDomains[i].on_sale = true
       this.allDomains[i].owner = "0x00"
       this.allDomains[i].parent = "eth"
       this.allDomains[i].registrant = "0x00"
       this.allDomains[i].registration_date = "2020.05.04 at 05:30"
+      const info = await this.checkDomain(domain, 'trellis');
+      this.allDomains[i].price = parseInt(info.price) / (10 ** 18)
+
+      //this.allDomains[i].price = await this.checkDomain(this.allDomains[i].domain_name, 'trellis')
+      //console.log('price ',await this.checkDomain(this.allDomains[i].domain_name, 'trellis'))
     }
     console.log('finish', this.allDomains);
   };
