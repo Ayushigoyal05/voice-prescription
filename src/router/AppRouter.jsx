@@ -6,6 +6,7 @@ import Store from "../utils/store";
 import Web3Service from "../utils/web3";
 import DomainDetails from "../components/DomainDetails";
 import Dashboard from "../components/Dashboard";
+import Landing from "../components/Landing";
 
 const AppRouter = props => {
   const [domainsList, setDomainsList] = React.useState([]);
@@ -43,8 +44,6 @@ const AppRouter = props => {
       domain => domain.owner.toLowerCase() === selectedAddress.toLowerCase()
     );
     setMyDomainList(myDomains);
-
-    
   };
 
   const updateDomainPrice = (domain, price) => {
@@ -85,7 +84,7 @@ const AppRouter = props => {
             />
           )}
         ></Route>
-        <Route path="/" exact render={() => <Redirect to="/buy"></Redirect>} />
+        <Route path="/" exact component={Landing} />
       </App>
     </Router>
   );
