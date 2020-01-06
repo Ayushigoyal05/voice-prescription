@@ -89,6 +89,7 @@ const BuySubdomainModal = props => {
                 removeParent={false}
                 subdomainPrepared={false}
                 buyable={false}
+                requiredBuyButton={false}
               />
             ) : null}
           </section>

@@ -52,6 +52,10 @@ const SubdomainItem = props => {
                   </Link>
                 </h2>
               ) : null}
+
+              {/* <h2 className="subtitle is-6">
+                <strong>Owner:</strong> {Store.shortenEthAddr(props.owner)}
+              </h2> */}
             </div>
           </div>
           <div className="level-right">
@@ -65,13 +69,15 @@ const SubdomainItem = props => {
                 <div className="title">{props.price}</div>
               </div>
             ) : null}
-            <button
-              className="button is-success"
-              aria-haspopup="true"
-              onClick={buySubdomain}
-            >
-              <span>Buy Now</span>
-            </button>
+            {props.requiredBuyButton ? (
+              <button
+                className="button is-success"
+                aria-haspopup="true"
+                onClick={buySubdomain}
+              >
+                <span>Buy Now</span>
+              </button>
+            ) : null}
           </div>
         </div>
       </div>

@@ -20,10 +20,10 @@ const LeaderboardItem = props => {
                 </Link>
               </h2>
 
-              <h2 className="subtitle is-6">
+              {/* <h2 className="subtitle is-6">
                 <strong>Owner:</strong>{" "}
                 {Store.shortenEthAddr(props.domain.owner)}
-              </h2>
+              </h2> */}
             </div>
           </div>
           <div className="level-right">

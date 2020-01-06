@@ -423,6 +423,7 @@ const Main = props => {
                   removeParent={false}
                   subdomainPrepared={true}
                   buyable={true}
+                  requiredBuyButton={true}
                   key={i}
                 />
               ))}
@@ -470,7 +471,7 @@ const Main = props => {
                       color="#00BFFF"
                       height={24}
                       width={24}
-                      style={{ marginRight: 12 }}
+                      style={{ marginRight: "12px" }}
                     />{" "}
                     Loading ...{" "}
                   </h2>
