@@ -52,10 +52,6 @@ const SubdomainItem = props => {
                   </Link>
                 </h2>
               ) : null}
-
-              <h2 className="subtitle is-6">
-                <strong>Owner:</strong> {Store.shortenEthAddr(props.owner)}
-              </h2>
             </div>
           </div>
           <div className="level-right">

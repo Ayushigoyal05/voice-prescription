@@ -27,8 +27,8 @@ const AppRouter = props => {
     const fetchAccount = async () => {
       const selldomains = await Store.all_domains();
       setDomainsList(selldomains);
-      const address = await Web3Service.getAccount();
       await Web3Service.start();
+      const address = await Web3Service.getAccount();
 
       if (address) {
         setSelectedAddress(address[0]);

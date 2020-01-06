@@ -163,18 +163,24 @@ class Web3Service {
       this.allDomains[i].contract = registrars[domain.registrar];
       this.allDomains[i].controller = "0x00";
       this.allDomains[i].on_sale = true;
-      this.allDomains[i].owner = "0x00";
+      //this.allDomains[i].owner = "0x00";
+      this.allDomains[i].resolver = "0x00";
       this.allDomains[i].parent = "eth";
       this.allDomains[i].registrant = "0x00";
       this.allDomains[i].registration_date = "2020.05.04 at 05:30";
       this.allDomains[i].subdomains = [];
       const info = await this.checkDomain(domain, "trellis");
       this.allDomains[i].price = parseInt(info.price) / 10 ** 18;
+
+      console.log(this.allDomains[i]);
     }
   };
 
   checkDomain = async (domain, subdomain) => {
-    var info = await this.registrarVersions.query(domain, subdomain);
+    var info = await this.registrarVersions.query(
+      domain,
+      subdomain
+    );
     return info;
   };
 
@@ -203,9 +209,7 @@ class Web3Service {
         window.readOnly = false;
       } else {
         window.web3 = new Web3(
-          new Web3.providers.HttpProvider(
-            "https://mainnet.infura.io/Rg6BrBl8vIqJBc7AlL9h"
-          )
+          new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws")
         );
         window.readOnly = true;
       }
