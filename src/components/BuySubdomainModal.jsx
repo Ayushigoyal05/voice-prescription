@@ -8,12 +8,15 @@ const BuySubdomainModal = props => {
   const [validSubdomain, setValidSubdomain] = React.useState(false);
   const [openBuying, setOpenBuying] = React.useState(false);
 
-  const handleSubdomainText = e => {
+  const handleSubdomainText = async (e) => {
     setSubdomainText(e.target.value);
-    if (e.target.value) {
-      setValidSubdomain(true);
-    } else {
+    const info = await Web3Service.checkDomain(
+      props.domain,e.target.value
+    );
+    if (!info.domain) {
       setValidSubdomain(false);
+    } else {
+      setValidSubdomain(true);
     }
   };
 
@@ -80,23 +83,15 @@ const BuySubdomainModal = props => {
               </div>
             </div>
             {validSubdomain ? (
-              <SubdomainItem
-                subdomainName={subdomainText}
-                domainName={props.domain.domain_name}
-                owner={props.domain.owner}
-                price={props.domain.price}
-                removePrice={false}
-                removeParent={false}
-                subdomainPrepared={false}
-                buyable={false}
-                requiredBuyButton={false}
-              />
-            ) : null}
+              <button className="button is-danger" onClick={buySubdomain}>
+                Buy
+              </button>
+            ) : <button className="button is-warning" disabled={true}>
+              Buy
+            </button>}
           </section>
           <footer className="modal-card-foot">
-            <button className="button is-danger" onClick={buySubdomain}>
-              Buy
-            </button>
+
           </footer>
         </div>
         <button

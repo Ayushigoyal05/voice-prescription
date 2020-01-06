@@ -3,6 +3,7 @@ import SubdomainItem from "./SubdomainItem";
 import LeaderboardItem from "./LeaderboardItem";
 import BuySubdomainModal from "./BuySubdomainModal";
 import Loader from "react-loader-spinner";
+import Web3Service from "../utils/web3";
 
 class CustomCheckbox extends React.Component {
   state = {
@@ -77,44 +78,41 @@ const Main = props => {
   ]);
   const [doReset, setDoReset] = React.useState(false);
 
-  const handleSubdomainChange = e => {
-    setLoading(true);
+  const handleSubdomainChange = async (e) => {
+
 
     const subdomain = e.target.value;
-    console.log(subdomain);
     setSubdomain(subdomain);
-    if (e.target.value !== "") {
-      const domains = props.domains;
-      const newSubdomains = domains.map(domain => ({
-        ...domain,
-        subdomain_name: subdomain + "." + domain.domain_name
-      }));
-      const newSubdomainFiltered = newSubdomains.filter(
-        subdomain => subdomain.on_sale
-      );
-      setSubdomainList(newSubdomainFiltered);
-      setFilteredSubdomainList(newSubdomainFiltered);
-      setValidSubdomain(true);
-    } else {
-      setSubdomainList([]);
-      setFilteredSubdomainList([]);
-      setValidSubdomain(false);
-    }
-    setLoading(false);
+
   };
 
-  const handleLoadMore = () => {
+  const handleLoadMore = async () => {
+    setLoading(true);
     const domains = props.domains;
     const newSubdomains = domains.map(domain => ({
       ...domain,
       subdomain_name: subdomain + "." + domain.domain_name
     }));
-    const newSubdomainFiltered = newSubdomains.filter(
+    var filteredSubdomainbyAvail = newSubdomains;
+    for(var i = 0;i<newSubdomains.length;i++){
+      const info = await Web3Service.checkDomain(
+        props.domains[i],subdomain
+      );
+      filteredSubdomainbyAvail[i].price = parseInt(info.price) / 10 ** 18;
+      if (!info.domain) {
+        filteredSubdomainbyAvail[i].avail = false;
+      }
+      else{
+        filteredSubdomainbyAvail[i].avail = true;
+      }
+    }
+    const newSubdomainFiltered = filteredSubdomainbyAvail.filter(
       subdomain => subdomain.on_sale
     );
     setSubdomainList(newSubdomainFiltered);
     setFilteredSubdomainList(newSubdomainFiltered);
     setValidSubdomain(true);
+    setLoading(false);
   };
 
   const openBuySubdomainModal = (open, domain) => {
@@ -152,7 +150,7 @@ const Main = props => {
         return res;
       });
       const onSaleDomains = sortedDomain.filter(domain => domain.on_sale);
-      setLeaderboardList(onSaleDomains.slice(1, 5));
+      setLeaderboardList(onSaleDomains.slice(0, 5));
     }
   }, [props]);
 
@@ -268,7 +266,21 @@ const Main = props => {
                   <i className="fas fa-check"></i>
                 </span>
               ) : null}
-            </div>
+
+          </div>
+          <br/>
+          <center><div
+            >
+              <button
+                className="button is-success"
+                aria-haspopup="true"
+                value={subdomain}
+                onClick={handleLoadMore}
+              >
+                <span>Search Subdomain</span>
+              </button>
+
+            </div></center>
           </div>
         </div>
 
@@ -417,13 +429,13 @@ const Main = props => {
                   domain={subdomain}
                   address={props.userAddress}
                   domainName={subdomain.domain_name}
-                  owner={subdomain.owner}
+                  //owner={subdomain.owner}
                   price={subdomain.price}
+                  avail={subdomain.avail}
                   removePrice={false}
                   removeParent={false}
                   subdomainPrepared={true}
                   buyable={true}
-                  requiredBuyButton={true}
                   key={i}
                 />
               ))}
@@ -439,6 +451,7 @@ const Main = props => {
               </button>
             </div>
           </div>
+
         ) : null}
         {filteredSubdomainList.length === 0 ? (
           <div>
@@ -471,7 +484,7 @@ const Main = props => {
                       color="#00BFFF"
                       height={24}
                       width={24}
-                      style={{ marginRight: "12px" }}
+                      style={{ marginRight: 12 }}
                     />{" "}
                     Loading ...{" "}
                   </h2>

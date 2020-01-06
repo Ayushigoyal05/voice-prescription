@@ -31,7 +31,7 @@ var database = firebase.database();
 //      });
 //}
 
-const referrerAddress = "0x0904Dac3347eA47d208F3Fd67402D039a3b99859";
+const referrerAddress = "0x4db928f96c8b6581a79557b269d9ad35935d3601";
 
 const SubdomainRegistrar = contract(subdomainregistrar_artifacts);
 const ENS = contract(ens_artifacts);
@@ -169,8 +169,6 @@ class Web3Service {
       this.allDomains[i].registrant = "0x00";
       this.allDomains[i].registration_date = "2020.05.04 at 05:30";
       this.allDomains[i].subdomains = [];
-      const info = await this.checkDomain(domain, "trellis");
-      this.allDomains[i].price = parseInt(info.price) / 10 ** 18;
 
       console.log(this.allDomains[i]);
     }
