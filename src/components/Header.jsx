@@ -72,19 +72,10 @@ const Header = props => {
             ) : null}
           </div>
           <div className="navbar-item">
-            {!props.userAddress ? (
-              <button
-                className="button is-light"
-                style={{ backgroundColor: "#c1c1c1" }}
-                disabled
-              >
-                Dashboard
-              </button>
-            ) : (
               <Link to="/dashboard" className="button is-link">
                 Dashboard
               </Link>
-            )}
+
           </div>
         </div>
       </div>

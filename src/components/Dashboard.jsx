@@ -2,6 +2,7 @@ import React from "react";
 import Store from "../utils/store";
 import SubdomainItem from "./SubdomainItem";
 import { Link } from "react-router-dom";
+import Web3Service from "../utils/web3";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -13,7 +14,8 @@ class Dashboard extends React.Component {
     };
   }
 
-  componentDidUpdate() {
+  async componentDidUpdate() {
+    const address = await Web3Service.getAccount();
     if (this.props.myDomains.length && !this.state.firstTimeLoaded) {
       this.setState({
         putOnSale: this.props.myDomains.map(domain => false),
@@ -25,7 +27,8 @@ class Dashboard extends React.Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const address = await Web3Service.getAccount();
     if (this.props.myDomains.length && !this.state.firstTimeLoaded) {
       this.setState({
         putOnSale: this.props.myDomains.map(domain => false),
@@ -86,6 +89,12 @@ class Dashboard extends React.Component {
                 {Store.capitaliseString("My domains")}
               </h2>
               <div>
+                <button
+                  className="button"
+                  aria-haspopup="true"
+                >
+                  <span>Buy Now</span>
+                </button>
                 {this.props.myDomains.map((domain, i) => (
                   <div
                     className="card has-background-light"

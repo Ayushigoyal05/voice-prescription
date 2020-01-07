@@ -7,6 +7,7 @@ import ShowBuyingModal from "./ShowBuyingModal";
 const SubdomainItem = props => {
   const [openBuying, setOpenBuying] = React.useState(false);
   const buySubdomain = async () => {
+    const address = await Web3Service.getAccount();
     if (props.buyable) {
       setOpenBuying(true);
       const info = await Web3Service.checkDomain(
@@ -16,9 +17,10 @@ const SubdomainItem = props => {
       const tx = await Web3Service.buySubdomain(
         props.domain,
         props.subdomainName.split(".")[0],
-        props.address,
+        address[0],
         info
       );
+      closeOpenBuying();
     }
   };
   const closeOpenBuying = () => {
