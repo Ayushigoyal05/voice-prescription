@@ -50,6 +50,7 @@ class Main extends React.Component {
       filterDomainText: "",
       subdomainList: [],
       filteredSubdomainList: [],
+      charFilteredSubdomainList: [],
       loadSubdomains: props.loadSubdomains || 10,
       currentLoadSubdomains: 0,
       showLoadMore: false,
@@ -58,6 +59,7 @@ class Main extends React.Component {
       leaderboardList: [],
       openBuyModal: false,
       selectedDomain: {},
+      charfilterSelected: false,
       selectedOnSale: false,
       selectedOnOffer: false,
       selectedCharLen: [
@@ -157,13 +159,15 @@ class Main extends React.Component {
     const domain = e.target.value;
     this.setState({ filterDomainText: domain });
     if (e.target.value !== "") {
-      const filteredSubdomain = this.state.subdomainList.filter(
+      const filteredSubdomain = this.state.filteredSubdomainList.filter(
         subdomain => subdomain.domain_name.indexOf(domain) !== -1
       );
 
       if (filteredSubdomain.length > 0) {
         this.setState({ filteredSubdomainList: filteredSubdomain });
       }
+    } else if (this.state.charFilteredSubdomainList) {
+      this.setState({ filteredSubdomainList: this.state.charFilteredSubdomainList });
     } else {
       this.setState({ filteredSubdomainList: this.state.subdomainList });
     }
@@ -239,13 +243,34 @@ class Main extends React.Component {
   };
 
   handleCharLenUpdate = charLen => {
+    if (this.props.domains !== undefined){
+      var charLenDomains = [];
+      const localfilteredSubdomainList = this.state.charfilterSelected ? [...this.state.subdomainList] : [...this.state.filteredSubdomainList];
+    charLen.map(function(charLen, i) {
+      if (charLen.selected) {
+        const len = parseInt(charLen.type.split(" ")[0])
+        charLenDomains = charLenDomains.concat(localfilteredSubdomainList.filter(domain => domain.domain_name.split('.')[0].length == len ));
+      }
+    });
+    console.log('asadasdas',charLenDomains);
+    if(charLenDomains.length > 0) {
+        this.setState({ filteredSubdomainList: charLenDomains });
+        this.setState({ charFilteredSubdomainList: charLenDomains})
+    } else {
+        this.setState({ charfilterSelected: false })
+        this.setState({ filteredSubdomainList: localfilteredSubdomainList})
+        this.setState({ charFilteredSubdomainList: localfilteredSubdomainList})
+    }
+    this.setState({ charfilterSelected: true});
     this.setState({ selectedCharLen: charLen });
+  }
   };
 
   handleReset = () => {
     this.setState({ selectedOnOffer: false });
     this.setState({ selectedOnSale: false });
     this.setState({ filterDomainText: "" });
+    this.setState({ charfilterSelected: false });
     this.setState({ filteredSubdomainList: this.state.subdomainList });
     this.setState({
       selectedCharLen: [
