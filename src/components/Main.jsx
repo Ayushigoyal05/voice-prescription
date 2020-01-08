@@ -535,46 +535,6 @@ class Main extends React.Component {
               ) : null}
             </div>
           ) : null}
-          {this.state.filteredSubdomainList.length === 0 ? (
-            <div>
-              <div style={{ marginBottom: 18 }}>
-                <center>
-                  <h2 className="title">Leaderboard</h2>
-                </center>
-              </div>
-              <div>
-                {this.state.leaderboardList.length > 0 ? (
-                  this.state.leaderboardList.map((domain, i) => (
-                    <LeaderboardItem
-                      domain={domain}
-                      index={i + 1}
-                      setOpenBuyModal={this.openBuySubdomainModal}
-                      key={i}
-                    />
-                  ))
-                ) : (
-                  <center>
-                    <h2
-                      className="subtitle"
-                      style={{
-                        display: "flex",
-                        justifyContent: "center"
-                      }}
-                    >
-                      <Loader
-                        type="Oval"
-                        color="#00BFFF"
-                        height={24}
-                        width={24}
-                        style={{ marginRight: "12px" }}
-                      />{" "}
-                      Loading ...{" "}
-                    </h2>
-                  </center>
-                )}
-              </div>
-            </div>
-          ) : null}
         </div>
       </section>
     );
