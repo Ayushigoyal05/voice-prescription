@@ -37,53 +37,53 @@ const SubdomainRegistrar = contract(subdomainregistrar_artifacts);
 const ENS = contract(ens_artifacts);
 
 class Web3Service {
-  aallDomains = [
-    {
-      domain_name: "etherbase.eth",
-      owner: "0xDDF369C3bf18b1B12EA295d597B943b955eF4671",
-      controller: "0xC32659651D137A18b79925449722855aA327231d",
-      registrant: "0xC32659651D137A18b79925449722855aA327231d",
-      registration_date: "2020.05.04 at 05:30",
-      parent: "eth",
-      on_sale: true,
-      price: 0
-    },
-    {
-      domain_name: "isfund.eth",
-      parent: "eth",
-      registration_date: "2019.03.08 at 13:35",
-      on_sale: true,
-      price: 0.03,
-      owner: "0xC32659651D137A18b79925449722855aA327231d",
-      controller: "0xC32659651D137A18b79925449722855aA327231d",
-      registrant: "0xC32659651D137A18b79925449722855aA327231d",
-      resolver: "0xD4fC014343cd971B7eb70732021E26dk5B744cf4"
-    },
-    {
-      domain_name: "thecryptoguy.eth",
-      parent: "eth",
-      registration_date: "2019.12.12 at 21:12",
-      on_sale: true,
-      price: 0.02,
-      owner: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1",
-      controller: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1",
-      registrant: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1",
-      resolver: "0x2dfC014343cd971Bfdb70732021E26dk5B744csd",
-      subdomains: []
-    },
-    {
-      domain_name: "trustnobank.eth",
-      parent: "eth",
-      registration_date: "2019.12.12 at 21:12",
-      on_sale: true,
-      price: 0.01,
-      owner: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1",
-      controller: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1",
-      registrant: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1",
-      resolver: "0x2dfC014343cd971Bfdb70732021E26dk5B744csd",
-      subdomains: []
-    }
-  ];
+  // aallDomains = [
+  //   {
+  //     domain_name: "etherbase.eth",
+  //     owner: "0xDDF369C3bf18b1B12EA295d597B943b955eF4671",
+  //     controller: "0xC32659651D137A18b79925449722855aA327231d",
+  //     registrant: "0xC32659651D137A18b79925449722855aA327231d",
+  //     registration_date: "2020.05.04 at 05:30",
+  //     parent: "eth",
+  //     on_sale: true,
+  //     price: 0
+  //   },
+  //   {
+  //     domain_name: "isfund.eth",
+  //     parent: "eth",
+  //     registration_date: "2019.03.08 at 13:35",
+  //     on_sale: true,
+  //     price: 0.03,
+  //     owner: "0xC32659651D137A18b79925449722855aA327231d",
+  //     controller: "0xC32659651D137A18b79925449722855aA327231d",
+  //     registrant: "0xC32659651D137A18b79925449722855aA327231d",
+  //     resolver: "0xD4fC014343cd971B7eb70732021E26dk5B744cf4"
+  //   },
+  //   {
+  //     domain_name: "thecryptoguy.eth",
+  //     parent: "eth",
+  //     registration_date: "2019.12.12 at 21:12",
+  //     on_sale: true,
+  //     price: 0.02,
+  //     owner: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1",
+  //     controller: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1",
+  //     registrant: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1",
+  //     resolver: "0x2dfC014343cd971Bfdb70732021E26dk5B744csd",
+  //     subdomains: []
+  //   },
+  //   {
+  //     domain_name: "trustnobank.eth",
+  //     parent: "eth",
+  //     registration_date: "2019.12.12 at 21:12",
+  //     on_sale: true,
+  //     price: 0.01,
+  //     owner: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1",
+  //     controller: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1",
+  //     registrant: "0xa7B5B93BF8B322023BDa57e2C86B57f4DDb4F4a1",
+  //     resolver: "0x2dfC014343cd971Bfdb70732021E26dk5B744csd",
+  //     subdomains: []
+  //   }
+  // ];
 
   allDomains = [];
 
@@ -175,10 +175,7 @@ class Web3Service {
   };
 
   checkDomain = async (domain, subdomain) => {
-    var info = await this.registrarVersions.query(
-      domain,
-      subdomain
-    );
+    var info = await this.registrarVersions.query(domain, subdomain);
     return info;
   };
 

@@ -1,5 +1,4 @@
 import React from "react";
-import Store from "../utils/store";
 import { Link } from "react-router-dom";
 import Web3Service from "../utils/web3";
 import ShowBuyingModal from "./ShowBuyingModal";
@@ -75,8 +74,7 @@ const SubdomainItem = props => {
               >
                 <span>Buy Now</span>
               </button>
-            ) :
-            (
+            ) : (
               <button
                 className="button is-success"
                 aria-haspopup="true"
@@ -84,7 +82,7 @@ const SubdomainItem = props => {
               >
                 <span>Buy Now</span>
               </button>
-            ) }
+            )}
           </div>
         </div>
       </div>

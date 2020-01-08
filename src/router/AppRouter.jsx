@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import App from "../App";
 import Main from "../components/Main";
-import Store from "../utils/store";
+import Utils from "../utils/utils";
 import Web3Service from "../utils/web3";
 import DomainDetails from "../components/DomainDetails";
 import Dashboard from "../components/Dashboard";
@@ -24,19 +24,25 @@ const AppRouter = props => {
   }
 
   React.useEffect(() => {
-    const fetchAccount = async () => {
-      const selldomains = await Store.all_domains();
+    const fetchDomains = async () => {
+      const selldomains = await Utils.all_domains();
       setDomainsList(selldomains);
       await Web3Service.start();
-      const address = [];
-      if (address) {
-        setSelectedAddress(address[0]);
-        fetchMyDomainAndSubdomain(address[0], domainsList);
-      }
+      // const address = [];
+      // if (address) {
+      //   setSelectedAddress(address[0]);
+      //   fetchMyDomainAndSubdomain(address[0], domainsList);
+      // }
     };
 
-    fetchAccount();
+    fetchDomains();
   }, []);
+
+  const addAddress = address => {
+    if (address) {
+      setSelectedAddress(address[0]);
+    }
+  };
 
   const fetchMyDomainAndSubdomain = (selectedAddress, domainsList) => {
     const myDomains = domainsList.filter(
@@ -55,12 +61,16 @@ const AppRouter = props => {
 
   return (
     <Router>
-      <App userAddress={selectedAddress}>
+      <App userAddress={selectedAddress} setAddress={addAddress}>
         <Route
           path="/buy"
           exact
           render={() => (
-            <Main domains={domainsList} userAddress={selectedAddress} />
+            <Main
+              domains={domainsList}
+              userAddress={selectedAddress}
+              loadSubdomains={10}
+            />
           )}
         />
         <Route
@@ -80,6 +90,7 @@ const AppRouter = props => {
               myDomains={myDomainList}
               mySubdomains={mySubdomainList}
               updateDomainPrice={updateDomainPrice}
+              setAddress={addAddress}
             />
           )}
         ></Route>

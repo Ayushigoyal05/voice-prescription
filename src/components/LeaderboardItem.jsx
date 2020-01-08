@@ -1,5 +1,5 @@
 import React from "react";
-import Store from "../utils/store";
+import Utils from "../utils/utils";
 import { Link } from "react-router-dom";
 
 const LeaderboardItem = props => {
@@ -22,7 +22,7 @@ const LeaderboardItem = props => {
 
               {/* <h2 className="subtitle is-6">
                 <strong>Owner:</strong>{" "}
-                {Store.shortenEthAddr(props.domain.owner)}
+                {Utils.shortenEthAddr(props.domain.owner)}
               </h2> */}
             </div>
           </div>

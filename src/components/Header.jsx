@@ -3,9 +3,22 @@ import makeBlockie from "ethereum-blockies-base64";
 import ReactTooltip from "react-tooltip";
 import ensLogo from "../assets/image/ens_logo.svg";
 import { Link } from "react-router-dom";
+import Web3Service from "../utils/web3";
+import { useLocation, useHistory } from "react-router";
 
 const Header = props => {
   const [showFullAddress, setShowFullAddress] = React.useState(false);
+  let location = useLocation();
+  let history = useHistory();
+  const handleConnect = async () => {
+    if (location.pathname === "/dashboard") {
+      const address = await Web3Service.getAccount();
+      props.setAddress(address);
+    } else {
+      history.push("/dashboard");
+    }
+  };
+
   return (
     <nav
       className="navbar is-light is-fixed-top"
@@ -72,10 +85,16 @@ const Header = props => {
             ) : null}
           </div>
           <div className="navbar-item">
-              <Link to="/dashboard" className="button is-link">
-                Dashboard
-              </Link>
-
+            <button
+              onClick={handleConnect}
+              className={
+                "button " + (props.userAddress ? "is-success" : "is-link")
+              }
+            >
+              {location.pathname === "/dashboard" && !props.userAddress
+                ? "Connect"
+                : "Dashboard"}
+            </button>
           </div>
         </div>
       </div>

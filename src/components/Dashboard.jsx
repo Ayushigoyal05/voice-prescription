@@ -1,5 +1,5 @@
 import React from "react";
-import Store from "../utils/store";
+import Utils from "../utils/utils";
 import SubdomainItem from "./SubdomainItem";
 import { Link } from "react-router-dom";
 import Web3Service from "../utils/web3";
@@ -15,7 +15,6 @@ class Dashboard extends React.Component {
   }
 
   async componentDidUpdate() {
-    const address = await Web3Service.getAccount();
     if (this.props.myDomains.length && !this.state.firstTimeLoaded) {
       this.setState({
         putOnSale: this.props.myDomains.map(domain => false),
@@ -29,6 +28,7 @@ class Dashboard extends React.Component {
 
   async componentDidMount() {
     const address = await Web3Service.getAccount();
+    this.props.setAddress(address);
     if (this.props.myDomains.length && !this.state.firstTimeLoaded) {
       this.setState({
         putOnSale: this.props.myDomains.map(domain => false),
@@ -67,7 +67,7 @@ class Dashboard extends React.Component {
           </div>
           <div>
             <h2 className="title is-5">
-              {Store.capitaliseString("My subdomains")}
+              {Utils.capitaliseString("My subdomains")}
             </h2>
             <div>
               {this.props.mySubdomains
@@ -86,13 +86,10 @@ class Dashboard extends React.Component {
             </div>
             <div style={{ marginTop: 48 }}>
               <h2 className="title is-5">
-                {Store.capitaliseString("My domains")}
+                {Utils.capitaliseString("My domains")}
               </h2>
               <div>
-                <button
-                  className="button"
-                  aria-haspopup="true"
-                >
+                <button className="button" aria-haspopup="true">
                   <span>Buy Now</span>
                 </button>
                 {this.props.myDomains.map((domain, i) => (

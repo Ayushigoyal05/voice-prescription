@@ -43,78 +43,105 @@ class CustomCheckbox extends React.Component {
 }
 
 class Main extends React.Component {
-  state = {
-    subdomain: "",
-    filterDomainText: "",
-    subdomainList: [],
-    filteredSubdomainList: [],
-    loading: false,
-    validSubdomain: false,
-    leaderboardList: [],
-    openBuyModal: false,
-    selectedDomain: {},
-    selectedOnSale: false,
-    selectedOnOffer: false,
-    selectedCharLen: [
-      {
-        type: "3 Characters",
-        selected: false
-      },
-      {
-        type: "4 Characters",
-        selected: false
-      },
-      {
-        type: "5 Characters",
-        selected: false
-      },
-      {
-        type: "6 Characters",
-        selected: false
-      },
-      {
-        type: "7+ Characters",
-        selected: false
-      }
-    ],
-    doReset: false,
-    loadOneTime: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      subdomain: "",
+      filterDomainText: "",
+      subdomainList: [],
+      filteredSubdomainList: [],
+      loadSubdomains: props.loadSubdomains || 10,
+      currentLoadSubdomains: 0,
+      showLoadMore: false,
+      loading: false,
+      validSubdomain: false,
+      leaderboardList: [],
+      openBuyModal: false,
+      selectedDomain: {},
+      selectedOnSale: false,
+      selectedOnOffer: false,
+      selectedCharLen: [
+        {
+          type: "3 Characters",
+          selected: false
+        },
+        {
+          type: "4 Characters",
+          selected: false
+        },
+        {
+          type: "5 Characters",
+          selected: false
+        },
+        {
+          type: "6 Characters",
+          selected: false
+        },
+        {
+          type: "7+ Characters",
+          selected: false
+        }
+      ],
+      doReset: false,
+      loadOneTime: false
+    };
+  }
 
   handleSubdomainChange = async e => {
     const subdomain = e.target.value;
     this.setState({ subdomain });
   };
 
-  handleLoadMore = async () => {
-    this.setState({ loading: true });
-    const domains = this.props.domains;
-    const newSubdomains = domains.map(domain => ({
-      ...domain,
-      subdomain_name: this.state.subdomain + "." + domain.domain_name
-    }));
-    var filteredSubdomainbyAvail = newSubdomains;
-    var saleSubdomains = [];
-    for (var i = 0; i < newSubdomains.length; i++) {
-      const info = await Web3Service.checkDomain(
-        this.props.domains[i],
-        this.state.subdomain
-      );
-      filteredSubdomainbyAvail[i].price = parseInt(info.price) / 10 ** 18;
-      if (!info.domain) {
-        filteredSubdomainbyAvail[i].avail = false;
-      } else {
-        filteredSubdomainbyAvail[i].avail = true;
+  handleLoadMore = () => {
+    this.setState({ loading: true, showLoadMore: false });
+    this.loadSubdomain = setInterval(async () => {
+      console.log(this.props.domains.length);
+      if (this.props.domains.length) {
+        clearInterval(this.loadSubdomain);
+
+        const domains = this.props.domains;
+        const newSubdomains = domains.map(domain => ({
+          ...domain,
+          subdomain_name: this.state.subdomain + "." + domain.domain_name
+        }));
+        var filteredSubdomainbyAvail = newSubdomains;
+        var saleSubdomains = this.state.subdomainList;
+        const endLoop =
+          this.state.loadSubdomains + this.state.currentLoadSubdomains >
+          newSubdomains.length
+            ? newSubdomains.length
+            : this.state.loadSubdomains + this.state.currentLoadSubdomains;
+        for (var i = this.state.currentLoadSubdomains; i < endLoop; i++) {
+          const info = await Web3Service.checkDomain(
+            this.props.domains[i],
+            this.state.subdomain
+          );
+          filteredSubdomainbyAvail[i].price = parseInt(info.price) / 10 ** 18;
+          if (!info.domain) {
+            filteredSubdomainbyAvail[i].avail = false;
+          } else {
+            filteredSubdomainbyAvail[i].avail = true;
+          }
+          if (filteredSubdomainbyAvail[i].on_sale) {
+            saleSubdomains.push(filteredSubdomainbyAvail[i]);
+            // console.log(saleSubdomains);
+            this.setState({
+              subdomainList: saleSubdomains,
+              filteredSubdomainList: saleSubdomains
+            });
+          }
+        }
+        const currentLoadSubdomains =
+          this.state.loadSubdomains + this.state.currentLoadSubdomains;
+        const showLoadMore = newSubdomains.length > currentLoadSubdomains;
+        this.setState({
+          validSubdomain: true,
+          loading: false,
+          showLoadMore,
+          currentLoadSubdomains
+        });
       }
-      if (filteredSubdomainbyAvail[i].on_sale) {
-        saleSubdomains.push(filteredSubdomainbyAvail[i]);
-        console.log(saleSubdomains);
-        this.setState({ subdomainList: saleSubdomains });
-        this.setState({ filteredSubdomainList: saleSubdomains });
-      }
-    }
-    this.setState({ validSubdomain: true });
-    this.setState({ loading: false });
+    }, 1000);
   };
 
   openBuySubdomainModal = (open, domain) => {
@@ -350,7 +377,7 @@ class Main extends React.Component {
                       </div>
                     </div>
                   </div>
-                  <div className="level-item">
+                  {/* <div className="level-item">
                     <div
                       className={
                         this.state.selectedOnSale
@@ -383,7 +410,7 @@ class Main extends React.Component {
                         <button className="delete"></button>
                       ) : null}
                     </div>
-                  </div>
+                  </div> */}
                   <div
                     className="level-item"
                     style={{
@@ -421,7 +448,7 @@ class Main extends React.Component {
                         role="menu"
                       >
                         <div className="dropdown-content">
-                          <a
+                          {/* <a
                             className="dropdown-item"
                             onClick={this.sortByRecent}
                           >
@@ -432,7 +459,7 @@ class Main extends React.Component {
                             onClick={this.sortByPopularity}
                           >
                             Popularity
-                          </a>
+                          </a> */}
                           <a
                             className="dropdown-item"
                             onClick={this.sortByPriceLowToHigh}
@@ -469,16 +496,18 @@ class Main extends React.Component {
                   />
                 ))}
               </div>
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <button
-                  className="button"
-                  aria-haspopup="true"
-                  value={this.state.subdomain}
-                  onClick={this.handleLoadMore}
-                >
-                  <span>Load More</span>
-                </button>
-              </div>
+              {this.state.showLoadMore ? (
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <button
+                    className="button"
+                    aria-haspopup="true"
+                    value={this.state.subdomain}
+                    onClick={this.handleLoadMore}
+                  >
+                    <span>Load More</span>
+                  </button>
+                </div>
+              ) : null}
             </div>
           ) : null}
           {this.state.filteredSubdomainList.length === 0 ? (
@@ -512,7 +541,7 @@ class Main extends React.Component {
                         color="#00BFFF"
                         height={24}
                         width={24}
-                        style={{ marginRight: 12 }}
+                        style={{ marginRight: "12px" }}
                       />{" "}
                       Loading ...{" "}
                     </h2>

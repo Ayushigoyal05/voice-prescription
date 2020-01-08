@@ -7,7 +7,7 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 function App(props) {
   return (
     <div className="App">
-      <Header userAddress={props.userAddress} />
+      <Header userAddress={props.userAddress} setAddress={props.setAddress} />
       <div style={{ marginTop: 56 }}>{props.children}</div>
     </div>
   );

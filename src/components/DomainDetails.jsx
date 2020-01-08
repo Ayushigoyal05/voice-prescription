@@ -1,6 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import Store from "../utils/store";
+import Utils from "../utils/utils";
 import DomainDetailTab from "./DomainDetailTab";
 import SubdomainItem from "./SubdomainItem";
 
@@ -36,7 +36,7 @@ const DomainDetails = props => {
                   {domain
                     ? showFullAddress
                       ? domain.owner
-                      : Store.shortenEthAddr(domain.owner)
+                      : Utils.shortenEthAddr(domain.owner)
                     : null}
                 </p>
               </div>
