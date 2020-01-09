@@ -7,6 +7,7 @@ import Web3Service from "../utils/web3";
 import DomainDetails from "../components/DomainDetails";
 import Dashboard from "../components/Dashboard";
 import Landing from "../components/Landing";
+import SellDomains from "../components/SellDomains";
 
 const AppRouter = props => {
   const [domainsList, setDomainsList] = React.useState([]);
@@ -95,6 +96,7 @@ const AppRouter = props => {
           )}
         ></Route>
         <Route path="/" exact component={Landing} />
+        <Route path="/sell" exact render={() => <SellDomains />} />
       </App>
     </Router>
   );

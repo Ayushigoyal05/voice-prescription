@@ -57,6 +57,28 @@ const Header = props => {
       </div>
 
       <div id="navbarBasicExample" className="navbar-menu">
+        <div class="navbar-start">
+          <Link
+            class={
+              "navbar-item " +
+              (location.pathname === "/buy" ? "is-active" : null)
+            }
+            to="/buy"
+            style={{ padding: "0px 24px" }}
+          >
+            Buy
+          </Link>
+          <Link
+            class={
+              "navbar-item " +
+              (location.pathname === "/sell" ? "is-active" : null)
+            }
+            to="/sell"
+            style={{ padding: "0px 24px" }}
+          >
+            Sell
+          </Link>
+        </div>
         <div className="navbar-end">
           <div className="navbar-item">
             {props.userAddress ? (
