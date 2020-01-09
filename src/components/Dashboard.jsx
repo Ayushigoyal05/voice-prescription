@@ -10,7 +10,8 @@ class Dashboard extends React.Component {
     this.state = {
       putOnSale: [],
       salePrice: [],
-      firstTimeLoaded: false
+      firstTimeLoaded: false,
+      myDomains: []
     };
   }
 
@@ -38,6 +39,16 @@ class Dashboard extends React.Component {
         firstTimeLoaded: true
       });
     }
+
+    const domains = await Web3Service.getENSDomainsFromAccount(
+      "0xe947e32c6e1cfa4b9406e736782df1446a5b189b"
+    );
+    this.setState({
+      myDomains: domains.account.domains.map(domain => ({
+        ...domain,
+        on_sale: false
+      }))
+    });
   }
 
   handleSalePrice = (index, price) => {
@@ -66,33 +77,12 @@ class Dashboard extends React.Component {
             </center>
           </div>
           <div>
-            <h2 className="title is-5">
-              {Utils.capitaliseString("My subdomains")}
-            </h2>
-            <div>
-              {this.props.mySubdomains
-                ? this.props.mySubdomains.map((subdomain, i) => (
-                    <SubdomainItem
-                      subdomainName={subdomain.subdomain_name}
-                      domainName={subdomain.parent}
-                      owner={subdomain.owner}
-                      removePrice={true}
-                      removeParent={false}
-                      subdomainPrepared={false}
-                      key={i}
-                    />
-                  ))
-                : null}
-            </div>
             <div style={{ marginTop: 48 }}>
               <h2 className="title is-5">
                 {Utils.capitaliseString("My domains")}
               </h2>
               <div>
-                <button className="button" aria-haspopup="true">
-                  <span>Buy Now</span>
-                </button>
-                {this.props.myDomains.map((domain, i) => (
+                {this.state.myDomains.map((domain, i) => (
                   <div
                     className="card has-background-light"
                     style={{ marginBottom: 18 }}
@@ -110,8 +100,8 @@ class Dashboard extends React.Component {
                           </div>
                           <div>
                             <h2 className="title is-4">
-                              <Link to={`/domain/${domain.domain_name}`}>
-                                {domain.domain_name}
+                              <Link to={`/domain/${domain.name}`}>
+                                {domain.name}
                               </Link>
                             </h2>
                           </div>
@@ -181,7 +171,7 @@ class Dashboard extends React.Component {
                                     className="title is-3"
                                     style={{ marginRight: 12 }}
                                   >
-                                    {domain.price}
+                                    {/* {domain.price} */}
                                   </h2>
                                   <button
                                     class="button is-danger"
@@ -194,7 +184,7 @@ class Dashboard extends React.Component {
                               )}
 
                               <Link
-                                to={`/domain/${domain.domain_name}`}
+                                to={`/domain/${domain.name}`}
                                 className="button is-link"
                               >
                                 Manage

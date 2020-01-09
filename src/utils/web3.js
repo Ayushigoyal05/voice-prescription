@@ -4,6 +4,7 @@ import subdomainregistrar_artifacts from "../contracts/EthRegistrarSubdomainRegi
 import ens_artifacts from "../contracts/ENS.json";
 import { keccak_256 as sha3 } from "js-sha3";
 import { default as namehash } from "eth-ens-namehash";
+import { request } from "graphql-request";
 //import domainnames from './domains.json';
 
 var firebase = require("firebase/app");
@@ -212,6 +213,25 @@ class Web3Service {
       console.log(error);
     }
     return account;
+  };
+
+  getENSDomainsFromAccount = address => {
+    const query = `{
+      account(id: "${address}") {
+        domains {
+          labelName
+          name
+          parent {
+            name
+          }
+        }
+      }
+    }`;
+
+    return request(
+      "https://api.thegraph.com/subgraphs/name/ensdomains/ens",
+      query
+    );
   };
 }
 
