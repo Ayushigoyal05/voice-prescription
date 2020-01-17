@@ -5,7 +5,6 @@ import {
   CardTitle,
   CardImg,
   CardBody,
-  CardFooter,
   Button,
   Container,
   Row,
@@ -52,19 +51,26 @@ export default class ManageAccess extends React.Component {
       <div>
         <Container className="main-container">
         <Row>
+        
               {
                 this.state.items.map(item =>
-                  <Col sm="12" md="3">
+                  
+                  <Col sm="12" md="4">
+                                    
+
                   <Card style={{ maxWidth: "300px" }} key={item.id}>
-                    <CardHeader>Card header</CardHeader>
-                    <CardImg src="https://place-hold.it/300x200" />
+                    <CardHeader>Type Of Doctor:</CardHeader>
+                    <CardImg style={{Height: "30px;"}}  src="https://qtxasset.com/styles/breakpoint_sm_default_480px_w/s3/2017-03/docpatient.jpg?GvE6pAWrtlrDAAkYFQVjDPm.hWRmT30j&itok=JptFnnhntps://place-hold.it/300x200" />
                     <CardBody>
-                      <CardTitle>Lorem Ipsum</CardTitle>
-                      <p>Lorem ipsum dolor sit amet.</p>
-                      <Button>Read more &rarr;</Button>
+                      <CardTitle>Fee:</CardTitle>
+                      <p>MBBS,MD</p>
+                      <Button>Grant Access &rarr;</Button>
                     </CardBody>
-                    <CardFooter>Card footer</CardFooter>
+                   
                   </Card>
+                  < br />
+                  < br />
+
                   </Col>
                 )
               }

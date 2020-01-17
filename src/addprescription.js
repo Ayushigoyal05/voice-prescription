@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Card, CardBody, CardHeader, CardTitle, FormInput, FormTextarea, Button } from "shards-react";
+import { Container, Row, Col, Card, CardBody, CardHeader, CardTitle, FormInput, Button } from "shards-react";
 import { ReactMic } from 'react-mic';
 
 export default class AddPrescription extends React.Component {

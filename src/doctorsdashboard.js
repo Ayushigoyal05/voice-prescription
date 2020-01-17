@@ -2,7 +2,7 @@ import React from "react";
 import { 
   Container,
   Row,Col, CardBody, FormInput, Button ,Card, CardHeader,
-  Modal, ModalBody, ModalFooter, ModalHeader
+  Modal, ModalBody, ModalHeader
 } from "shards-react";
 
 

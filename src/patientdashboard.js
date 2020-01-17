@@ -2,11 +2,9 @@ import React from "react";
 import { Container, Row, Col } from "shards-react";
 import {
   Card,
-  CardHeader,
   CardTitle,
   CardImg,
   CardBody,
-  CardFooter,
   Button
 } from "shards-react";
 export default class UserPrescriptions extends React.Component {
@@ -48,21 +46,25 @@ export default class UserPrescriptions extends React.Component {
           <Row>
               {
                 this.state.items.map(item =>
-                  <Col sm="12" md="3">
-                  <Card style={{ maxWidth: "300px" }} key={item.id}>
-                    <CardHeader>Card header</CardHeader>
-                    <CardImg src="https://place-hold.it/300x200" />
+                  <Col sm="12" md="4">
+                                    
+                  <Card style={{ maxWidth: "300px"}} key={item.id}>
+  
+                    <CardImg style={{Height: "30px;"}} src="https://rscbayarea.com/app/uploads/photo_African-American-woman-talking-with-Asian-doctor2-400x399.jpg" />
                     <CardBody>
-                      <CardTitle>Lorem Ipsum</CardTitle>
-                      <p>Lorem ipsum dolor sit amet.</p>
-                      <Button>Read more &rarr;</Button>
+                      <CardTitle>Illness Detected:</CardTitle>
+                      <p>Read Your Prescription</p>
+                      <Button>Click Me &rarr;</Button>
                     </CardBody>
-                    <CardFooter>Card footer</CardFooter>
                   </Card>
+                  <br />
+          <br />
+
                   </Col>
                 )
               }
           </Row>
+          
         </Container>
       </div>
     );
