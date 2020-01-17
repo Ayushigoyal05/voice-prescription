@@ -15,7 +15,7 @@ import './index.css';
 import NavBar from './Navbar';
 import AddPrescription from './addprescription'
 import DoctorsDashboard from './doctorsdashboard';
-import MedicalHistory from './medicalhistory';
+import ManageAccess from './manageaccess'
 import UserPrescriptions from './patientdashboard';
 
 // -------------------------------------
@@ -31,7 +31,7 @@ class Main extends React.Component {
         <Route path="/add-prescription" component={AddPrescription}/>
         <Route path="/patient-prescriptions" component={UserPrescriptions}/>
         <Route path="/doctors-dashboard" component={DoctorsDashboard}/>
-        <Route path="/medical-history" component={MedicalHistory}/>
+        <Route path="/manage-access" component={ManageAccess}/>
       </HashRouter>
       </div>
     );
